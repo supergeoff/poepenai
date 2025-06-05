@@ -1,0 +1,13 @@
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      run: golangci-lint fmt ./...
+      exclude:
+        - mage_output_file.go
+    lint:
+      run: mage Lint
+commit-msg:
+  commands:
+    conventional:
+       run: ./tools/commitlint.sh {1}

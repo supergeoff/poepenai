@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .log-entry {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            /* Handles newlines in JSON */
+            word-wrap: break-word;
+            /* Breaks long lines */
+            font-family: monospace;
+        }
+
+        .no-logs {
+            color: #777;
+        }
+    </style>
+    <script src="https://unpkg.com/htmx.org@2.0.4"
+        integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <h1>Server Logs</h1>
+
+    <div id="logs-container" hx-get="/logs" hx-trigger="every 2s" hx-swap="innerHTML">
+        {{/* This is the content that will be replaced by HTMX polls */}}
+        {{/* It's also the content rendered on initial page load */}}
+        {{define "logentries"}}
+        {{if .Logs}}
+        {{range .Logs}}
+        <div class="log-entry">{{.}}</div>
+        {{end}}
+        {{else}}
+        <p class="no-logs">No log entries available.</p>
+        {{end}}
+        {{end}}
+        {{template "logentries" .}}
+    </div>
+</body>
+
+</html>
