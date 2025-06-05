@@ -6,7 +6,7 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "git submodule update --init --recursive --remote",
+            "command": "git submodule update --recursive --remote",
             "runOptions": {
                 "runOn": "folderOpen"
             }
