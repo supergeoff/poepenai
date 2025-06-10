@@ -5,7 +5,7 @@ FROM golang:latest AS builder
 RUN go install github.com/magefile/mage@latest
 
 # Copy source code
-WORKDIR /tmp
+WORKDIR /app
 COPY . .
 
 # Set as portable binary
@@ -20,7 +20,7 @@ RUN mage build
 FROM alpine:latest
 
 # With only the portable binary
-COPY --from=builder /tmp/dist/poepenai /usr/local/bin/poepenai
+COPY --from=builder /app/dist/poepenai /usr/local/bin/poepenai
 
 # And start it
 EXPOSE 8080
