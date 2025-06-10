@@ -1,22 +1,27 @@
-# Étape 1: Construction de l'application avec Mage
+# Build on a specific image
 FROM golang:latest AS builder
 
-# Installer les dépendances système et Mage
+# Install build dependencies
 RUN go install github.com/magefile/mage@latest
 
-# Copier le code source
-WORKDIR /app
+# Copy source code
+WORKDIR /tmp
 COPY . .
 
-# Construire le binaire avec Mage
+# Set as portable binary
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV GOARCH=amd64
+
+# Build
 RUN mage build
 
-# Étape 2: Création de l'image d'exécution finale
+# Create a minimal image
 FROM alpine:latest
 
-# Copier le binaire depuis le builder
-COPY --from=builder /app/dist/poepenai /usr/local/bin/poepenai
+# With only the portable binary
+COPY --from=builder /tmp/dist/poepenai /usr/local/bin/poepenai
 
-# Définir les paramètres d'exécution
+# And start it
 EXPOSE 8080
 CMD ["poepenai", "start"]
